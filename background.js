@@ -39,12 +39,47 @@
 // //    });
 // //   })
 
-    chrome.tabs.onActivated.addListener((tab) => {
-          chrome.tabs.get(tab.tabId, (current_tab_info) => {
-            if (tab.tabId) {
-                    chrome.tabs.executeScript(null, { file: "./foreground.js" }, () => {
-                                console.log("Foreground script Injected!");
-                        });
-            }
-          });
-        });
+    // chrome.tabs.onActivated.addListener((tab) => {
+    //       chrome.tabs.get(tab.tabId, (current_tab_info) => {
+    //         if (tab.tabId) {
+    //                 chrome.tabs.executeScript(null, { file: "./foreground.js" }, () => {
+    //                             console.log("Foreground script Injected!");
+    //                     });
+    //         }
+    //       });
+    //     });
+
+
+    const messageQueue = ['Title Here', 'content'];
+    let textToPopUp = '';
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        // Arbitrary string allowing the background to distinguish
+  // message types. You might also be able to determine this
+  // from the `sender`.
+  if (message.type === 'from_content_script') {
+      messageQueue.push(message);
+    } else if (message.type === 'from_popup') {
+    //   sendResponse(messageQueue[0]);
+    fetchData().then(x =>{
+        console.log('then fetch :', x);
+        return x;
+    });
+
+    
+    // console.log('textToPopUp :', textToPopUp);
+      sendResponse(textToPopUp);
+    
+}
+});
+
+async function fetchData() {
+    let text = '';
+    const res=await fetch ("https://app.surferseo.com/api/v1/locations");
+    const record=await res.json();
+    // test = record.data[0];
+
+    // console.log('From foreground test :', test);
+    console.log('Inside Fetch :', record[0]);
+    text = record[0];
+    return text;
+};

@@ -15,11 +15,20 @@
     
 // // });
 
-async function fetchData() {
-    const res=await fetch ("https://api.coronavirus.data.gov.uk/v1/data");
-    const record=await res.json();
-    // document.getElementById("first").innerHTML = record.data[0].areaName;
-    $("#first").text(record.data[0].areaName);
-    $("h3").append('ADD');
-}
-fetchData();
+// async function fetchData() {
+//     const res=await fetch ("https://api.coronavirus.data.gov.uk/v1/data");
+//     const record=await res.json();
+//     // document.getElementById("first").innerHTML = record.data[0].areaName;
+//     $("#first").text(record.data[0].areaName);
+//     $("h3").append('ADD');
+// }
+// fetchData();
+
+chrome.runtime.sendMessage({type: 'from_popup'}, (response) => {
+    // do stuff with response (which will be the value of messageQueue
+    // sent from background.js).
+        $("#first").text(response);
+        // $("h3").append(response);
+        // $("#textArea").append(response);
+  });
+  
