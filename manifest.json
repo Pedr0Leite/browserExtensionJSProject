@@ -1,13 +1,14 @@
 {
-    "name":"",
-    "description":"",
+    "name":"First App",
+    "description":"This is my first app",
     "version":"0.1.0",
     "manifest_version":2,
     "icons":{
-
+        "16": "./surf-wave-icon-16.png"
     },
     "background":{
-        "scripts":["./background.js"]
+        "scripts":["thirdParty/jquery-3.6.0.js","./background.js"],
+        "persistent": false
     },
     "options_page": "./options.html",
     "browser_action": {
@@ -15,6 +16,7 @@
     },
     "permissions":[
         "tabs",
-        "INPUT WEBSITE URL IF YOU WANT HERE"
+        "<all_urls>",
+        "storage"
     ]
 }
