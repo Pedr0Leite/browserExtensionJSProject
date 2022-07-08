@@ -15,15 +15,15 @@
 	
 // });
 
-// chrome.tabs.onActivated.addListener((tab) => {
-//   chrome.tabs.get(tab.tabId, (current_tab_info) => {
-//     if (tab.tabId) {
-//       chrome.tabs.executeScript(null, { file: "./foreground.js" }, () => {
-//         console.log("Injected!");
-//       });
-//     }
-//   });
-// });
+chrome.tabs.onActivated.addListener((tab) => {
+  chrome.tabs.get(tab.tabId, (current_tab_info) => {
+    if (tab.tabId) {
+      chrome.tabs.executeScript(null, { file: "./contentScript.js" }, () => {
+        console.log("Injected!");
+      });
+    }
+  });
+});
 
 // // chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
 // //     url = tabs[0].url;
@@ -42,8 +42,8 @@
     // chrome.tabs.onActivated.addListener((tab) => {
     //       chrome.tabs.get(tab.tabId, (current_tab_info) => {
     //         if (tab.tabId) {
-    //                 chrome.tabs.executeScript(null, { file: "./foreground.js" }, () => {
-    //                             console.log("Foreground script Injected!");
+    //                 chrome.tabs.executeScript(null, { file: "./contentScript.js" }, () => {
+    //                             console.log("contentScript script Injected!");
     //                     });
     //         }
     //       });
@@ -62,12 +62,11 @@
     //   sendResponse(messageQueue[0]);
     fetchData().then(x =>{
         console.log('then fetch :', x);
-        return x;
-    });
+        textToPopUp = x;
+        return textToPopUp;
+    }).then(sendResponse(textToPopUp));
 
-    
-    // console.log('textToPopUp :', textToPopUp);
-      sendResponse(textToPopUp);
+    // sendResponse(textToPopUp);
     
 }
 });
@@ -78,8 +77,8 @@ async function fetchData() {
     const record=await res.json();
     // test = record.data[0];
 
-    // console.log('From foreground test :', test);
-    console.log('Inside Fetch :', record[0]);
-    text = record[0];
+    // console.log('From contentScript test :', test);
+    console.log('Inside Fetch :', record[1]);
+    text = record[1];
     return text;
 };

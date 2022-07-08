@@ -31,4 +31,3 @@ chrome.runtime.sendMessage({type: 'from_popup'}, (response) => {
         // $("h3").append(response);
         // $("#textArea").append(response);
   });
-  
