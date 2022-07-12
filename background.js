@@ -95,11 +95,11 @@ chrome.tabs.onActivated.addListener((tab) => {
 // };
 
 async function fetchData() {
-
+  const rapidapi_key = process.env.API_KEY;
   const options = {
     method: 'GET',
     headers: {
-      'X-RapidAPI-Key': '82fabe4f08msh43eec743fd8efa5p16c427jsnd15617ca20b3',
+      'X-RapidAPI-Key': rapidapi_key,
       'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
     }
   };
