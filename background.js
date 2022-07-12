@@ -18,6 +18,7 @@
 chrome.tabs.onActivated.addListener((tab) => {
   chrome.tabs.get(tab.tabId, (current_tab_info) => {
     if (tab.tabId) {
+      chrome.tabs.insertCSS(null, {file: "./mystyle.css"})
       chrome.tabs.executeScript(null, { file: "./contentScript.js" }, () => {
         console.log("Injected!");
       });
@@ -56,29 +57,64 @@ chrome.tabs.onActivated.addListener((tab) => {
         // Arbitrary string allowing the background to distinguish
   // message types. You might also be able to determine this
   // from the `sender`.
-  if (message.type === 'from_content_script') {
-      messageQueue.push(message);
-    } else if (message.type === 'from_popup') {
-    //   sendResponse(messageQueue[0]);
-    fetchData().then(x =>{
-        console.log('then fetch :', x);
-        textToPopUp = x;
-        return textToPopUp;
-    }).then(sendResponse(textToPopUp));
+  if(message.type == 'second'){
 
-    // sendResponse(textToPopUp);
     
+  }else if(message.type === 'from_content_script') {
+    messageQueue.push(message);
+    
+  } else if (message.type === 'from_popup') {
+
+      // sendResponse(messageQueue[0]);
+    // fetchData().then(x =>{
+    //     console.log('then fetch :', x);
+    //     textToPopUp = x;
+    //     return textToPopUp;
+    //   }).then(()=>{
+
+    //     sendResponse(textToPopUp)
+    //   })
+    fetchData().then((result)=> {
+      textToPopUp = result.location.name;
+      console.log('textToPopUp 0:', result);
+      console.log('textToPopUp 1:', textToPopUp);
+      return textToPopUp;
+  });
+  
+  
 }
+  sendResponse(textToPopUp)
 });
 
-async function fetchData() {
-    let text = '';
-    const res=await fetch ("https://app.surferseo.com/api/v1/locations");
-    const record=await res.json();
-    // test = record.data[0];
 
-    // console.log('From contentScript test :', test);
-    console.log('Inside Fetch :', record[1]);
-    text = record[1];
-    return text;
+// async function fetchData() {
+//     const res = await fetch ("https://app.surferseo.com/api/v1/locations");
+//     const record = await res.json();
+//     console.log('Inside Fetch :', record[1]);
+//     return record[1];
+// };
+
+async function fetchData() {
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': '82fabe4f08msh43eec743fd8efa5p16c427jsnd15617ca20b3',
+      'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
+    }
+  };
+
+  const res = await fetch('https://weatherapi-com.p.rapidapi.com/current.json?q=Porto%2C%20Portugal', options);
+  const record = await res.json();
+  // console.log('record :', record);
+
+  return record;
+
+// 	res.then(response => {
+//     console.log('Response 0: ' + response.json());
+//     return response.json()})
+// 	.then(response => {
+//     console.log('Response 1: ' + response); 
+//     return response})
+// 	.catch(err => console.error(err));
 };
